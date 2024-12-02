@@ -14,6 +14,7 @@ public class PigLatinTranslator
 
   public static String translate(String input)
   {
+    System.out.println("Hello");
     // System.out.println("Translate String: '" + input + "'");
 
     // Replace this code to translate a string input.
