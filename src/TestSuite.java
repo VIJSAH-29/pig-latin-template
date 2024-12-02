@@ -4,7 +4,7 @@ public class TestSuite
     public static void run()
     {
         boolean pass = true;
-        // "null" :) 
+        // "null" :)
         pass &= basicTest("null", "ullnay");
 
         // Test that empty strings don't crash.
