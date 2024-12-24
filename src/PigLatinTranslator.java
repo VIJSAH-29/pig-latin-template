@@ -1,44 +1,83 @@
 import java.lang.*;
+public class PigLatinTranslator {
 
-public class PigLatinTranslator
-{
-  public static Book translate(Book input)
-  {
-    Book translatedBook = new Book();
+    private static boolean isVowel(String s) {
+        return "aeiouAEIOU".contains(s);
+    }
 
-    // Add code here to populate translatedBook with a translation of the input book.
-    // Curent do-nothing code will return an empty book.
 
-    return translatedBook;
-  }
+    public static String translateWord(String currentWord) {
+        String translation = "";
+        int indexFound = 0;
+        for (int i=0; i < currentWord.length(); i++){
+            String currentLetter = currentWord.substring(i, i+1);
+            if (isVowel(currentLetter)) {
+                indexFound = i;
+                break;
+            }
+        }
+        if (indexFound == 0) {
+            translation = currentWord.replace(".", "") + "ay";
+        } else {
+            translation = currentWord.substring(indexFound, currentWord.length()) + currentWord.substring(0, indexFound).toLowerCase() + "ay";
+            translation = translation.replace(".", "");
+        }
 
-  public static String translate(String input)
-  {
-    System.out.println("Hello");
-    // System.out.println("Translate String: '" + input + "'");
+        if (!(currentWord.trim().isEmpty()) && Character.isUpperCase(currentWord.charAt(0))) {
+            String temp = translation.substring(0,1).toUpperCase() + translation.substring(1, translation.length());
+            translation = temp;
+        } 
 
-    // Replace this code to translate a string input.
-    // The input to this function could be any English string. 
-    // A sentence, paragraph, or a single word. 
-    // It should call translateWord at least once.
-    String result = translateWord(input);
+        if (!(currentWord.trim().isEmpty()) && currentWord.contains(".")) {
+            String temp = translation + ".";
+            translation = temp; 
+        }
+        return translation;
+    }
 
-    return result;
-  }
 
-  private static String translateWord(String input)
-  {
-    // System.out.println("translateWord: '" + input + "'");
+    public static String translate (String input){
 
-    // Replace this code to correctly translate a single word.
-    // Start here first!
-    String result = input;
-    
-    return result;
-  }
+        if (input.trim().isEmpty()) {
+            return input;
+        } 
 
-  // Add additonal private methods here.
-  // For example, I had one like this:
-  // private static String capitalizeFirstLetter(String input)
+        String[] words = input.split("[,\\s]");
+        String[] translatedWords = new String[words.length];
 
+
+        for (int j = 0; j < words.length; j++) {
+            String currentWord = words[j];
+
+            translatedWords[j] = translateWord(currentWord);
+            /* */
+            if (!(currentWord.contains("-"))) {
+               
+            } else {
+                String[] splitWord = currentWord.split("-");
+                String[] wordParts = new String[splitWord.length];
+                for (int i = 0; i < splitWord.length; i++) {
+                    String translatedWord = translateWord(splitWord[i]);
+                    wordParts[i] = translatedWord;
+                }
+                translatedWords[j] = String.join("-", wordParts);
+            }
+        }
+        String newLine = String.join(" ", translatedWords);
+        return newLine;
+    }
+
+
+
+
+    public static Book translate(Book input) {
+        Book pigLatinBook = new Book();
+   
+        for (int i = 0; i < input.getLineCount(); i++) {
+            String currentLine = input.getLine(i);
+            pigLatinBook.appendLine(translate(currentLine));
+        }
+
+        return pigLatinBook;
+    }
 }
